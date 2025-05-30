@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorando São Paulo</title>
+    <link rel='stylesheet' type='text/css'
+          href='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.63.0/maps/maps.css'>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5; /* Light grey background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure full viewport height */
+        }
+
+        #map-container {
+            width: 90vw; /* Slightly less than full width */
+            height: 85vh; /* Slightly less than full height */
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+            overflow: hidden; /* Ensures rounded corners are visible */
+            position: relative; /* For potential future overlays */
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Basic styling for map controls, if needed */
+        .tt-controls-container {
+            padding: 10px;
+        }
+
+        /* Marker styling */
+        .park-marker {
+            background-color: #4CAF50; /* Green for parks */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #fff; /* White border */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .park-marker::after {
+            content: '🌳'; /* Tree emoji for park */
+            font-size: 12px;
+            line-height: 1;
+        }
+    </style>
+    <script src='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.63.0/maps/maps-web.min.js'></script>
+</head>
+<body>
+
+<div th:insert="~{fragments/header :: headerFragment}"></div>
+
+
+<div id="map-container">
+    <div id='map' class='map'></div>
+</div>
+
+
+<script th:inline="javascript">
+    // São Paulo coordinates (approximate center)
+    const saoPauloCenter = [-46.633309, -23.55052]; // Longitude, Latitude
+
+    // Park locations in São Paulo (Longitude, Latitude)
+    const parks = [
+        { name: 'Parque Ibirapuera', coordinates: [-46.6575, -23.587] },
+        { name: 'Parque Villa-Lobos', coordinates: [-46.7214, -23.5484] },
+        { name: 'Parque da Independência', coordinates: [-46.6105, -23.583] },
+        { name: 'Parque do Carmo', coordinates: [-46.4678, -23.5707] },
+        { name: 'Parque da Água Branca', coordinates: [-46.6669, -23.5262] }
+    ];
+
+    var map = tt.map({
+        key: [[${apikey}]], // this will be replaced by Thymeleaf at runtime
+        container: 'map',
+        style: 'tomtom://vector/1/basic-main', // You can try 'tomtom://vector/1/standard-light' for a lighter theme
+        center: saoPauloCenter,
+        zoom: 11 // Adjusted zoom level to show São Paulo and some parks
+    });
+
+    map.addControl(new tt.FullscreenControl());
+    map.addControl(new tt.NavigationControl());
+
+    // Add markers for each park
+    parks.forEach(function(park) {
+        var markerElement = document.createElement('div');
+        markerElement.className = 'park-marker';
+        // You can add a tooltip or popup here if you want
+        // markerElement.title = park.name;
+
+        new tt.Marker({
+            element: markerElement,
+            anchor: 'bottom' // Anchor the marker to its bottom center
+        })
+            .setLngLat(park.coordinates)
+            .setPopup(new tt.Popup({ offset: 30 }).setText(park.name)) // Add a popup with the park name
+            .addTo(map);
+    });
+
+</script>
+</body>
+</html>
