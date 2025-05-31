@@ -1,0 +1,47 @@
+<!-- src/main/resources/templates/knowledge_form.html -->
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${formTitle} + ' – Conhecimento'">Formulário de Artigo</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<div th:insert="~{fragments/header :: headerFragment}"></div>
+
+<main class="container">
+    <h1 th:text="${formTitle}">Formulário</h1>
+
+    <form th:action="@{/conhecimento/save}" th:object="${knowledge}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+
+        <div class="form-group">
+            <label for="title">Título</label>
+            <input
+                    type="text"
+                    id="title"
+                    th:field="*{title}"
+                    placeholder="Digite o título do artigo"
+            />
+            <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Conteúdo</label>
+            <textarea
+                    id="content"
+                    th:field="*{content}"
+                    placeholder="Digite o conteúdo do artigo"
+                    rows="10"
+            ></textarea>
+            <div class="error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            <span th:text="${knowledge.id == null ? 'Salvar Artigo' : 'Atualizar Artigo'}">Salvar</span>
+        </button>
+        <a th:href="@{/conhecimento}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</main>
+</body>
+</html>

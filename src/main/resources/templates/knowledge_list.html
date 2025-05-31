@@ -1,0 +1,49 @@
+<!-- src/main/resources/templates/knowledge_list.html -->
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Conhecimento – Lista de Artigos</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<div th:insert="~{fragments/header :: headerFragment}"></div>
+
+<main class="container">
+    <div class="page-header">
+        <h1>Artigos de Conhecimento</h1>
+        <a th:href="@{/conhecimento/new}" class="btn btn-primary">Novo Artigo</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(articles)}">
+        <p class="empty-message">Nenhum artigo cadastrado ainda.</p>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(articles)}">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Título</th>
+                <th>Criado em</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="art : ${articles}">
+                <td>
+                    <a th:href="@{|/conhecimento/${art.id}|}" th:text="${art.title}">Título</a>
+                </td>
+                <td th:text="${#temporals.format(art.createdAt, 'dd/MM/yyyy HH:mm')}">data</td>
+                <td>
+                    <a th:href="@{|/conhecimento/${art.id}/edit|}" class="btn btn-secondary btn-sm">Editar</a>
+                    <a th:href="@{|/conhecimento/${art.id}/delete|}"
+                       onclick="return confirm('Deseja realmente excluir este artigo?');"
+                       class="btn btn-danger btn-sm">Excluir</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

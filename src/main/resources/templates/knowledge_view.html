@@ -1,0 +1,31 @@
+<!-- src/main/resources/templates/knowledge_view.html -->
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${article.title} + ' – Conhecimento'">Visualizar Artigo</title>
+  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<div th:insert="~{fragments/header :: headerFragment}"></div>
+
+<main class="container">
+  <div class="page-header">
+    <h1 th:text="${article.title}">Título do Artigo</h1>
+    <small th:text="${#temporals.format(article.createdAt, 'dd/MM/yyyy HH:mm')}">data</small>
+  </div>
+
+  <article class="article-content" th:utext="${article.content}">
+    <!-- O th:utext preserva quebras de linha e HTML, se houver. -->
+  </article>
+
+  <div class="article-actions">
+    <a th:href="@{/conhecimento}" class="btn btn-secondary">Voltar à Lista</a>
+    <a th:href="@{|/conhecimento/${article.id}/edit|}" class="btn btn-primary">Editar</a>
+    <a th:href="@{|/conhecimento/${article.id}/delete|}"
+       onclick="return confirm('Deseja realmente excluir este artigo?');"
+       class="btn btn-danger">Excluir</a>
+  </div>
+</main>
+</body>
+</html>
