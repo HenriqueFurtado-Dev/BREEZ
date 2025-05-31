@@ -1,0 +1,33 @@
+<!-- src/main/resources/templates/login.html -->
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – BREEZ</title>
+  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="auth-container">
+  <div class="auth-card">
+    <img class="auth-logo" th:src="@{/images/breez-logo.png}" alt="BREEZ Logo"/>
+    <h2>Entrar no BREEZ</h2>
+    <form th:action="@{/login}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <div class="form-group">
+        <label for="username">E-mail</label>
+        <input id="username" type="text" name="username" placeholder="seu@exemplo.com" required autofocus/>
+      </div>
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input id="password" type="password" name="password" placeholder="••••••••" required/>
+      </div>
+      <button type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+    <p class="alt-action">
+      Ainda não tem conta? <a th:href="@{/register}">Cadastre-se</a>
+    </p>
+  </div>
+</div>
+</body>
+</html>

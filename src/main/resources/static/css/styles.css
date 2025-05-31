@@ -1,3 +1,18 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
 .nav__food {
     list-style: none;
     position: fixed;
@@ -136,4 +151,121 @@
     .nav__food li a img {
         width: 40px;
     }
+}
+
+
+
+/* Emergency */
+.container { padding: 2rem; max-width: 800px; margin: auto; }
+h1, h2 { color: #c0392b; }
+.btn-call {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: #e74c3c;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+}
+.btn-call:hover { opacity: 0.9; }
+
+
+
+/*login e register*/
+/* Container centralizado para login/cadastro */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #6ec1e4 0%, #2a9df4 100%);
+    padding: 1rem;
+}
+
+/* Card branco com sombra suave */
+.auth-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    padding: 2.5rem;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Logo no topo do card */
+.auth-logo {
+    width: 120px;
+    margin-bottom: 1rem;
+}
+
+/* Títulos */
+.auth-card h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Grupos de input */
+.form-group {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2a9df4;
+}
+
+/* Botões */
+.btn {
+    display: inline-block;
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-primary {
+    background: #2a9df4;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1f85d1;
+    transform: translateY(-2px);
+}
+
+/* Link alternativo */
+.alt-action {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.alt-action a {
+    color: #2a9df4;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.alt-action a:hover {
+    text-decoration: underline;
 }
