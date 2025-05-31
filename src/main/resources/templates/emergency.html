@@ -1,0 +1,41 @@
+<!-- src/main/resources/templates/emergency.html -->
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Emergência & Contatos Úteis</title>
+  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<div th:insert="~{fragments/header :: headerFragment}"></div>
+
+<main class="container">
+  <h1>Emergência & Contatos Úteis</h1>
+
+  <section>
+    <h2>Serviços de Emergência</h2>
+    <ul>
+      <li th:each="c : ${contacts}">
+        <strong th:text="${c.name}">Nome</strong>:
+        <a th:href="${'tel:' + c.phoneNumber}"
+           th:text="${c.phoneNumber}">(xx) xxxx-xxxx</a>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Guia Rápido de Primeiros Socorros</h2>
+    <ol>
+      <li th:each="step : ${guide}" th:text="${step}">Passo</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Chamar Ajuda</h2>
+    <a th:href="${'tel:' + helpNumber}" class="btn-call">
+      Ligar para SAMU (<span th:text="${helpNumber}">192</span>)
+    </a>
+  </section>
+</main>
+</body>
+</html>
