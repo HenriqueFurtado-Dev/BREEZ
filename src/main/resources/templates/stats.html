@@ -1,0 +1,189 @@
+<!-- src/main/resources/templates/stats.html -->
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Estatísticas – BREEZ</title>
+
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+
+    <!-- Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div th:insert="~{fragments/header :: headerFragment}"></div>
+
+<main class="container">
+    <h1>Estatísticas de Temperatura e Alertas</h1>
+
+    <!-- 1) Gráfico de evolução diária -->
+    <section>
+        <h2>Evolução Diária da Temperatura (média)</h2>
+        <canvas id="dailyChart" width="800" height="300"></canvas>
+    </section>
+
+    <!-- 2) Gráfico de evolução semanal -->
+    <section>
+        <h2>Evolução Semanal da Temperatura (média)</h2>
+        <canvas id="weeklyChart" width="800" height="300"></canvas>
+    </section>
+
+    <!-- 3) Comparativo anual -->
+    <section>
+        <h2>Comparativo Anual da Temperatura (média)</h2>
+        <canvas id="yearlyChart" width="800" height="300"></canvas>
+    </section>
+
+    <!-- 4) Gráfico de alertas por região -->
+    <section>
+        <h2>Número de Alertas por Região</h2>
+        <canvas id="alertChart" width="800" height="300"></canvas>
+    </section>
+</main>
+
+
+<script th:inline="javascript">
+    /* ==== Dados diários ==== */
+    const dailyLabels = [[${dailyLabels}]];
+    const dailyData   = [[${dailyValues}]];
+
+    /* ==== Dados semanais ==== */
+    const weeklyLabels = [[${weeklyLabels}]];
+    const weeklyData   = [[${weeklyValues}]];
+
+    /* ==== Dados anuais ==== */
+    const yearlyLabels = [[${yearlyLabels}]];
+    const yearlyData   = [[${yearlyValues}]];
+
+    /* ==== Alertas por região ==== */
+    const alertRegionLabels = [[${alertRegionLabels}]];
+    const alertCounts       = [[${alertCounts}]];
+
+    /* === Criação de gráficos com Chart.js === */
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1) Gráfico diário (linha)
+        new Chart(document.getElementById('dailyChart'), {
+            type: 'line',
+            data: {
+                labels: dailyLabels,
+                datasets: [{
+                    label: 'Temperatura Média (°C)',
+                    data: dailyData,
+                    borderColor: 'rgba(42, 157, 244, 0.8)',
+                    backgroundColor: 'rgba(42, 157, 244, 0.2)',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(42, 157, 244, 0.9)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Data' },
+                        ticks: { maxRotation: 45, minRotation: 45 }
+                    },
+                    y: {
+                        title: { display: true, text: 'Temperatura (°C)' },
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+
+        // 2) Gráfico semanal (linha)
+        new Chart(document.getElementById('weeklyChart'), {
+            type: 'line',
+            data: {
+                labels: weeklyLabels,
+                datasets: [{
+                    label: 'Temperatura Média Semanal (°C)',
+                    data: weeklyData,
+                    borderColor: 'rgba(233, 196, 106, 0.8)',
+                    backgroundColor: 'rgba(233, 196, 106, 0.2)',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(233, 196, 106, 0.9)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Semana' },
+                        ticks: { maxRotation: 45, minRotation: 45 }
+                    },
+                    y: {
+                        title: { display: true, text: 'Temperatura (°C)' },
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+
+        // 3) Gráfico anual (linha)
+        new Chart(document.getElementById('yearlyChart'), {
+            type: 'line',
+            data: {
+                labels: yearlyLabels,
+                datasets: [{
+                    label: 'Temperatura Média Anual (°C)',
+                    data: yearlyData,
+                    borderColor: 'rgba(231, 111, 81, 0.8)',
+                    backgroundColor: 'rgba(231, 111, 81, 0.2)',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(231, 111, 81, 0.9)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Ano' },
+                        ticks: { maxRotation: 0, minRotation: 0 }
+                    },
+                    y: {
+                        title: { display: true, text: 'Temperatura (°C)' },
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+
+        // 4) Gráfico de barras - alertas por região
+        new Chart(document.getElementById('alertChart'), {
+            type: 'bar',
+            data: {
+                labels: alertRegionLabels,
+                datasets: [{
+                    label: 'Quantidade de Alertas',
+                    data: alertCounts,
+                    backgroundColor: 'rgba(38, 70, 83, 0.8)',
+                    borderColor: 'rgba(38, 70, 83, 1)',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Região' },
+                        ticks: { maxRotation: 45, minRotation: 45 }
+                    },
+                    y: {
+                        title: { display: true, text: 'Número de Alertas' },
+                        beginAtZero: true,
+                        precision: 0  // mostra números inteiros
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
