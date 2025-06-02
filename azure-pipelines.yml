@@ -2,16 +2,9 @@ trigger:
 - main
 
 variables:
-  # Conexão ARM criada no Azure DevOps
   azureSubscription: '98571f40-f262-45cc-b840-1fb739397b7a'
-
-  # Nome do Web App no Azure
   webAppName: 'breez'
-
-  # Ambiente para Deploy (nome do “environment” no Azure DevOps)
   environmentName: 'breez'
-
-  # VM image usada pelos agentes Hosted (já traz JDKs pré-instalados e disponíveis no cache)
   vmImageName: 'ubuntu-latest'
 
 stages:
@@ -24,28 +17,36 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
-    # 1) Instala o JDK 21 (do cache do Azure DevOps)
+    # 1) Instala o JDK 21 do cache do agente
     - task: JavaToolInstaller@0
       displayName: 'Install JDK 21'
       inputs:
-        jdkSourceOption: 'AzurePipelines'   # procura o JDK 21 no cache oficial do agente
-        versionSpec: '21'                   # versão alvo
-        jdkArchitectureOption: 'x64'        # arquitetura
+        jdkSourceOption: 'AzurePipelines'
+        versionSpec: '21'
+        jdkArchitectureOption: 'x64'
 
-    # 2) Build do Maven usando JDK 21
+    # (Opcional) Verifica a versão do Java previamente instalada
+    - script: |
+        echo '--- java -version ---'
+        java -version
+        echo '--- javac -version ---'
+        javac -version
+      displayName: 'Verificar versão Java instalada'
+
+    # 2) Build Maven usando o JDK 21 instalado acima
     - task: Maven@4
       displayName: 'Maven Package'
       inputs:
         mavenPomFile: 'pom.xml'
         mavenOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'       # indica que usaremos o JDK instalado via versionSpec
-        jdkVersionOption: '21'             # deve coincidir com o versionSpec acima
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '21'
         jdkArchitectureOption: 'x64'
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         goals: 'clean package'
 
-    # 3) Copia o artefato (.jar ou .war) para o artifact staging directory
+    # 3) Copia o jar/war gerado para o staging
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
       inputs:
@@ -53,7 +54,7 @@ stages:
         Contents: '**/target/*.?(jar|war)'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-    # 4) Publica o artifact para ser usado no Deploy
+    # 4) Publica o artifact
     - upload: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
 
@@ -71,7 +72,6 @@ stages:
       runOnce:
         deploy:
           steps:
-          # 5) Publica no Azure App Service Linux apontando para o jar/war gerado
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: breez'
             inputs:
