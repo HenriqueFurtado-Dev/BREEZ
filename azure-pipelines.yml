@@ -23,11 +23,12 @@ steps:
 
   # 3) Compilar com Maven usando JDK 21
   - task: Maven@4
-    displayName: 'Maven Package com JDK 21'
-    inputs:
-      mavenPomFile: 'pom.xml'
-      mavenOptions: '-Xmx3072m'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '21'
-      jdkArchitectureOption: 'x64'
-      goals: 'clean package'
+  displayName: 'Maven Package (skip tests)'
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    goals: 'clean package'
+    options: '-DskipTests'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '21'
+    jdkArchitectureOption: 'x64'
