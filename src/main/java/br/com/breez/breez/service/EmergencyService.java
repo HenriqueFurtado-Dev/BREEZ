@@ -1,4 +1,3 @@
-// src/main/java/br/com/breez/breez/service/EmergencyService.java
 package br.com.breez.breez.service;
 
 import br.com.breez.breez.model.EmergencyContact;
