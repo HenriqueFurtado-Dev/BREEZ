@@ -1,13 +1,18 @@
 package br.com.breez.breez.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Configuration
+@RestController
+@RequestMapping("/api")
+@RequiredArgsConstructor  // Gera construtor que recebe ChatClient
 public class ChatClientConfiguration {
 
 
