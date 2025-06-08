@@ -1,33 +1,43 @@
-<!-- src/main/resources/templates/fragments/header.html -->
-<div th:fragment="headerFragment">
+<div th:fragment="headerFragment" th:if="${#authorization.expression('isAuthenticated()')}">
     <nav>
         <ul class="nav__food">
-            <img class="logo" th:src="@{/images/breez-logo.png}" alt="Logo" />
+            <!-- Logo -->
+            <img class="logo" th:src="@{/images/breez-logo.png}"
+                 th:alt="#{header.logo.alt}" />
+
+            <!-- Links de navegação -->
             <li>
                 <a th:href="@{/}">
-                    <img src="https://cdn-icons-png.flaticon.com/128/1865/1865269.png" alt="">
-                    <span>Mapas</span>
+                    <img src="https://cdn-icons-png.flaticon.com/128/1865/1865269.png" alt="" />
+                    <span th:text="#{nav.maps}">Mapas</span>
                 </a>
             </li>
             <li>
                 <a th:href="@{/conhecimento}">
-                    <img src="https://cdn-icons-png.flaticon.com/128/14750/14750369.png" alt="">
-                    <span>Conhecimentos</span>
+                    <img src="https://cdn-icons-png.flaticon.com/128/14750/14750369.png" alt="" />
+                    <span th:text="#{nav.knowledge}">Conhecimentos</span>
                 </a>
             </li>
             <li>
                 <a th:href="@{/emergency}">
-                    <img src="https://cdn-icons-png.flaticon.com/128/14751/14751643.png" alt="">
-                    <span>Emergência</span>
+                    <img src="https://cdn-icons-png.flaticon.com/128/14751/14751643.png" alt="" />
+                    <span th:text="#{nav.emergency}">Emergência</span>
                 </a>
             </li>
             <li>
                 <a th:href="@{/stats}">
-                    <img src="https://cdn-icons-png.flaticon.com/128/14812/14812724.png" alt="">
-                    <span>Estatísticas</span>
+                    <img src="https://cdn-icons-png.flaticon.com/128/14812/14812724.png" alt="" />
+                    <span th:text="#{nav.stats}">Estatísticas</span>
                 </a>
+            </li>
+
+            <!-- Switcher de idiomas -->
+            <li class="nav-language">
+                <span th:text="#{nav.language}">Idioma:</span>
+
+                <a th:href="@{|?lang=pt_BR|}">PT</a> |
+                <a th:href="@{|?lang=en|}">EN</a>
             </li>
         </ul>
     </nav>
 </div>
-

@@ -1,33 +1,91 @@
-<!-- src/main/resources/templates/login.html -->
 <!DOCTYPE html>
-<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login – BREEZ</title>
-  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Título dinâmico -->
+  <title th:text="#{login.title}">Login – BREEZ</title>
+
+  <link th:href="@{/css/styles.css}" rel="stylesheet" />
 </head>
 <body>
+<div class="language-selector">
+  <a href="?lang=pt_BR" class="lang-option">Português</a>
+  <a href="?lang=en" class="lang-option">English</a>
+</div>
+
+<!-- Exibe fragmento de navegação -->
+<div th:insert="~{fragments/header :: headerFragment}"></div>
+
 <div class="auth-container">
   <div class="auth-card">
-    <img class="auth-logo" th:src="@{/images/breez-logo.png}" alt="BREEZ Logo"/>
-    <h2>Entrar no BREEZ</h2>
+    <img class="auth-logo" th:src="@{/images/breez-logo.png}"
+         th:alt="#{header.logo.alt}" />
+    <h2 th:text="#{login.title}">Entrar no BREEZ</h2>
+
+    <!-- Exibe mensagem de erro se houver parâmetro 'error' na URL -->
+    <div th:if="${param.error}" class="error-message"
+         th:text="#{login.error}">E-mail ou senha inválidos.</div>
+
     <form th:action="@{/login}" method="post">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <input type="hidden" th:name="${_csrf.parameterName}"
+             th:value="${_csrf.token}" />
       <div class="form-group">
-        <label for="username">E-mail</label>
-        <input id="username" type="text" name="username" placeholder="seu@exemplo.com" required autofocus/>
+        <label for="username" th:text="#{login.email}">E-mail</label>
+        <input id="username" type="text" name="username"
+               th:placeholder="#{login.email.placeholder}" required autofocus />
       </div>
       <div class="form-group">
-        <label for="password">Senha</label>
-        <input id="password" type="password" name="password" placeholder="••••••••" required/>
+        <label for="password" th:text="#{login.password}">Senha</label>
+        <input id="password" type="password" name="password"
+               th:placeholder="#{login.password.placeholder}" required />
       </div>
-      <button type="submit" class="btn btn-primary">Entrar</button>
+      <button type="submit" class="btn btn-primary"
+              th:text="#{login.button}">Entrar</button>
     </form>
+
     <p class="alt-action">
-      Ainda não tem conta? <a th:href="@{/register}">Cadastre-se</a>
+      <a th:href="@{/register}" th:text="#{login.register}">Ainda não tem conta? Cadastre-se</a>
     </p>
   </div>
 </div>
+
+<style>
+  .language-selector {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .lang-option {
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    transition: all 0.3s ease;
+  }
+
+  .lang-option:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+  }
+
+  .alt-action a {
+    color: #0066cc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .alt-action a:hover {
+    color: #004499;
+    text-decoration: underline;
+  }
+</style>
 </body>
 </html>
