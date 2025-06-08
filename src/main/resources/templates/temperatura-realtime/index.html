@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Temperaturas em Tempo Real</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <link th:href="@{/css/temperatura-realtime.css}" rel="stylesheet"/>
+</head>
+<body>
+    <div th:insert="~{fragments/header :: headerFragment}"></div>
+
+    <main class="container">
+        <div class="content-header">
+            <h1>Temperaturas em Tempo Real</h1>
+            <div class="action-buttons">
+                <a th:href="@{/temperatura-realtime/registrar}" class="btn btn-primary">
+                    Nova Medição
+                </a>
+                <a th:href="@{/temperatura-realtime/grafico}" class="btn btn-secondary">
+                    Ver Gráfico
+                </a>
+            </div>
+        </div>
+
+        <!-- Agregações -->
+        <section class="data-section">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Resumo por Região</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Região</th>
+                                    <th>Média Temperatura</th>
+                                    <th>Máxima</th>
+                                    <th>Mínima</th>
+                                    <th>Total Medições</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="agg : ${agregacao}">
+                                    <td th:text="${agg.id}"></td>
+                                    <td th:text="${#numbers.formatDecimal(agg.mediaTemperatura, 1, 1)} + '°C'"></td>
+                                    <td th:text="${#numbers.formatDecimal(agg.maxTemperatura, 1, 1)} + '°C'"></td>
+                                    <td th:text="${#numbers.formatDecimal(agg.minTemperatura, 1, 1)} + '°C'"></td>
+                                    <td th:text="${agg.totalMedicoes}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lista de Temperaturas -->
+        <section class="data-section">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Últimas Medições</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Região</th>
+                                    <th>Temperatura</th>
+                                    <th>Umidade</th>
+                                    <th>Condição</th>
+                                    <th>Fonte</th>
+                                    <th>Observações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="temp : ${temperaturas}">
+                                    <td th:text="${#temporals.format(temp.timestamp, 'dd/MM/yyyy HH:mm')}"></td>
+                                    <td th:text="${temp.regiao}"></td>
+                                    <td th:text="${#numbers.formatDecimal(temp.temperatura, 1, 1)} + '°C'"></td>
+                                    <td th:text="${temp.umidade != null ? #numbers.formatDecimal(temp.umidade, 1, 1) + '%' : '-'}"></td>
+                                    <td th:text="${temp.condicaoClima}"></td>
+                                    <td th:text="${temp.fonteSensor}"></td>
+                                    <td th:text="${temp.observacoes}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html> 

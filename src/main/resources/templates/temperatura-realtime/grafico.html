@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Gráfico de Temperaturas</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <link th:href="@{/css/temperatura-realtime.css}" rel="stylesheet"/>
+</head>
+<body>
+    <div th:insert="~{fragments/header :: headerFragment}"></div>
+
+    <main class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Gráfico de Temperaturas</h1>
+            <a th:href="@{/temperatura-realtime}" class="btn btn-secondary">
+                Voltar
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <canvas id="temperaturaChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+        <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const dados = /*[[${dados}]]*/ [];
+            
+            // Preparar dados para o gráfico
+            const regioes = [...new Set(dados.map(d => d.regiao))];
+            const datasets = regioes.map((regiao, index) => {
+                const dadosRegiao = dados.filter(d => d.regiao === regiao);
+                const hue = (index * 137.5) % 360; // Gera cores distintas
+                return {
+                    label: regiao,
+                    data: dadosRegiao.map(d => ({
+                        x: new Date(d.timestamp),
+                        y: d.temperatura
+                    })),
+                    borderWidth: 2,
+                    borderColor: `hsl(${hue}, 70%, 50%)`,
+                    backgroundColor: `hsl(${hue}, 70%, 50%, 0.1)`,
+                    fill: true,
+                    tension: 0.4
+                };
+            });
+
+            // Criar gráfico
+            new Chart('temperaturaChart', {
+                type: 'line',
+                data: {
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Histórico de Temperaturas por Região',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            padding: 20
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'minute',
+                                displayFormats: {
+                                    minute: 'dd/MM HH:mm'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Data/Hora',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Temperatura (°C)',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    }
+                }
+            });
+        });
+        </script>
+    </main>
+</body>
+</html> 
