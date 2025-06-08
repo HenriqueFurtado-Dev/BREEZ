@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class RegisterController {
@@ -20,24 +22,33 @@ public class RegisterController {
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", new User());
+        }
         return "register";
     }
 
     @PostMapping("/register")
     public String processRegistration(
-            @Valid User user,
+            @Valid @ModelAttribute("user") User user,
             BindingResult result,
             Model model
     ) {
         if (result.hasErrors()) {
             return "register";
         }
+
         if (userService.emailExists(user.getEmail())) {
             model.addAttribute("emailError", "Já existe uma conta com esse e-mail");
             return "register";
         }
-        userService.register(user);
-        return "redirect:/login?registered";
+
+        try {
+            userService.register(user);
+            return "redirect:/login?registered";
+        } catch (Exception e) {
+            model.addAttribute("error", "Erro ao cadastrar usuário. Tente novamente.");
+            return "register";
+        }
     }
 }
