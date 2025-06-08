@@ -9,11 +9,12 @@
   <title th:text="#{login.title}">Login – BREEZ</title>
 
   <link th:href="@{/css/styles.css}" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
 </head>
 <body>
 <div class="language-selector">
-  <a href="?lang=pt_BR" class="lang-option">Português</a>
-  <a href="?lang=en" class="lang-option">English</a>
+    <a href="?lang=pt_BR" class="lang-option">Português</a>
+    <a href="?lang=en" class="lang-option">English</a>
 </div>
 
 <!-- Exibe fragmento de navegação -->
@@ -46,46 +47,129 @@
               th:text="#{login.button}">Entrar</button>
     </form>
 
+    <!-- Separador -->
+    <div class="separator" style="margin: 20px 0; text-align: center; position: relative;">
+      <span style="background-color: white; padding: 0 10px; color: #666; position: relative; z-index: 1;">ou</span>
+      <hr style="margin: -10px 0 0 0; border: none; border-top: 1px solid #ddd;" />
+    </div>
+
+    <!-- Botão do Google -->
+    <a th:href="@{/oauth2/authorization/google}" class="google-btn">
+      <i class="fab fa-google"></i>
+      <span>Entrar com Google</span>
+    </a>
+
+
     <p class="alt-action">
       <a th:href="@{/register}" th:text="#{login.register}">Ainda não tem conta? Cadastre-se</a>
     </p>
   </div>
 </div>
 
+<script>
+    function handleGoogleClick(element) {
+        console.log('Clicou no botão do Google');
+        const url = element.href;
+        console.log('URL de redirecionamento:', url);
+        
+        // Força o redirecionamento
+        window.location.href = url;
+        return false; // Previne o comportamento padrão do link
+    }
+
+    // Log quando a página carrega
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Página de login carregada');
+        const googleBtn = document.querySelector('.google-btn');
+        if (googleBtn) {
+            console.log('Botão do Google encontrado:', googleBtn.getAttribute('href'));
+        } else {
+            console.error('Botão do Google não encontrado');
+        }
+    });
+</script>
+
 <style>
-  .language-selector {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-  }
+    .language-selector {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .lang-option {
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #333;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .lang-option:hover {
+        background-color: #f0f0f0;
+        border-color: #999;
+    }
+    
+    .alt-action a {
+        color: #0066cc;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .alt-action a:hover {
+        color: #004499;
+        text-decoration: underline;
+    }
 
-  .lang-option {
-    padding: 5px 10px;
-    text-decoration: none;
-    color: #333;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: white;
-    transition: all 0.3s ease;
-  }
+    /* Estilos para o separador */
+    .separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 20px 0;
+    }
 
-  .lang-option:hover {
-    background-color: #f0f0f0;
-    border-color: #999;
-  }
+    .separator::before,
+    .separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #ddd;
+    }
 
-  .alt-action a {
-    color: #0066cc;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
+    .separator span {
+        padding: 0 10px;
+        color: #666;
+        font-size: 14px;
+    }
 
-  .alt-action a:hover {
-    color: #004499;
-    text-decoration: underline;
-  }
+    /* Estilos para o botão do Google */
+    .google-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: white;
+        color: #333;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+    .google-btn:hover {
+        background-color: #f0f0f0;
+        border-color: #999;
+    }
+
+    .google-btn i {
+        color: #DB4437;
+    }
 </style>
 </body>
 </html>

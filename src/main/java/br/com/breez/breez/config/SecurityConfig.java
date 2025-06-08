@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,32 +14,45 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 1) Configurações de autorização de rotas
+                // 1) autorização de URLs
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/css/**", "/js/**", "/images/**",
                                 "/login", "/register", "/h2-console/**",
-                                "/api/ask"        // libera /api/ask sem exigir autenticação
+                                "/api/ask"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
 
-                // 2) Formulário de login
+                // 2) nosso login customizado
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
                         .failureUrl("/login?error")
                         .permitAll()
                 )
-                .logout(Customizer.withDefaults())
 
-                // 3) Desabilita CSRF apenas para /api/ask
+                // 3) OAuth2 (Google, etc) apontando para a mesma página
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                )
+
+                // 4) logout padrão
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                )
+
+                // 5) CSRF libera apenas /api/ask
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(new AntPathRequestMatcher("/api/ask"))
-                );
+                        .ignoringRequestMatchers("/api/ask")
+                )
 
-        // Se você usa H2 console em memória:
-        http.headers().frameOptions().disable();
+                // 6) cabeçalhos (H2 console etc)
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.disable())
+                );
 
         return http.build();
     }
